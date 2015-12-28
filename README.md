@@ -26,4 +26,4 @@ optional arguments:
 Prerequistes
 =============
 
-* PySLURM [https://github.com/gingergeeks/pyslurm] for job state querying.
+* [PySLURM](https://github.com/gingergeeks/pyslurm) for job state querying.
