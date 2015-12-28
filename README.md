@@ -1,12 +1,11 @@
-====================================
 iDynamic
 ====================================
+A quick and dirty script for dynamically queueing iPython parallel engines in SLURM
 
-Authors: Alexey Gritsenko <grizenko.a[AT][G-MAIL].com>
+Author: Alexey Gritsenko
 
 Overview
 ========
-A quick and dirty script for dynamically queueing iPython parallel engines in SLURM
 
 ```
 usage: idynamic.py [-h] [--profile PROFILE] [--profile-dir PROFILE_DIR]
