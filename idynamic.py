@@ -21,8 +21,8 @@ _JOB_DESC = '''#!/usr/bin/env bash
 #SBATCH --mem-per-cpu=17000
 #SBATCH -n 1
 #SBATCH -c 1
-#SBATCH -J idynamic
-#SBATCH -o idynamic.engine-%J.out
+#SBATCH -J dynamic
+#SBATCH -o dynamic.engine-%J.out
 #SBATCH --auks=yes
 
 hostname=`uname -n`
@@ -42,7 +42,7 @@ def log(string = '') :
     print '[%s] %s' % (fmt_time, string)
 
 class JobState :
-    RUNNING, SUSPENDED, COMPLETED, COMPLETING, PENDING = 'RUNNING', 'SUSPENDED', 'COMPLETED', 'COMPLETING', 'PENDING'
+    RUNNING, SUSPENDED, COMPLETED, TIMEOUT, COMPLETING, PENDING = 'RUNNING', 'SUSPENDED', 'COMPLETED', 'TIMEOUT', 'COMPLETING', 'PENDING'
 
 class QueueManager(object) :
 
@@ -124,7 +124,7 @@ class QueueManager(object) :
             command += ' --profile-dir=%s' % self.profile_dir
         description = ''.join([_JOB_DESC, command, '\n'])
 
-        filename = 'idynamic_job.%d' % self.pid
+        filename = 'job_idynamic.%d' % self.pid
         QueueManager._write_job_description_file(description, filename)
         job_id = QueueManager.slurm_submit(filename)
         if job_id > 0 :
@@ -160,7 +160,7 @@ class QueueManager(object) :
                 running_ids.append(job_id)
             elif info['job_state'] == JobState.PENDING :
                 queued_ids.append(job_id)
-            elif info['job_state'] in [JobState.COMPLETED, JobState.COMPLETING] :
+            elif info['job_state'] in [JobState.COMPLETED, JobState.COMPLETING, JobState.TIMEOUT] :
                 completed_ids.append(job_id)
             else :
                 log('[e] Unknown job state %s (job id = %d)' % (info['job_state'], job_id))
