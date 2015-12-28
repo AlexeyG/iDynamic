@@ -8,6 +8,7 @@ Overview
 ========
 A quick and dirty script for dynamically queueing iPython parallel engines in SLURM
 
+```
 usage: idynamic.py [-h] [--profile PROFILE] [--profile-dir PROFILE_DIR]
                    [--n N_WANTED] [--q MAX_N_QUEUED]
 
@@ -20,6 +21,7 @@ optional arguments:
                         iPython profile directory
   --n N_WANTED          Desired number of running engines (default: n = 10)
   --q MAX_N_QUEUED      Maximum number of queued jobs (default: q = 20)
+```
 
 Prerequistes
 =============
