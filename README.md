@@ -2,7 +2,7 @@
 iDynamic
 ====================================
 
-Authors: Alexey Gritsenko <grizenko.a@gmail.com>
+Authors: Alexey Gritsenko <grizenko.a[AT][G-MAIL].com>
 
 Overview
 ========
