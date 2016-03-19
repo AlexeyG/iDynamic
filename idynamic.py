@@ -17,8 +17,8 @@ _DEFAULT_MAX_N_QUEUED = 20
 _JOB_DESC = '''#!/usr/bin/env bash
 #SBATCH --partition=short --qos=short
 #SBATCH --time=4:00:00
-#SBATCH --mem=17000
-#SBATCH --mem-per-cpu=17000
+#SBATCH --mem=8000
+#SBATCH --mem-per-cpu=8000
 #SBATCH -n 1
 #SBATCH -c 1
 #SBATCH -J dynamic
@@ -34,6 +34,7 @@ echo "AVAILABLE CORES: $SLURM_JOB_CPUS_PER_NODE"
 '''
 
 _JOB_COMMAND = 'mpiexec -n $SLURM_JOB_CPUS_PER_NODE ipengine'
+#_JOB_COMMAND = 'ipengine'
 
 _SUBMIT_COMMAND = 'sbatch %s'
 
@@ -42,7 +43,7 @@ def log(string = '') :
     print '[%s] %s' % (fmt_time, string)
 
 class JobState :
-    RUNNING, SUSPENDED, COMPLETED, TIMEOUT, COMPLETING, PENDING = 'RUNNING', 'SUSPENDED', 'COMPLETED', 'TIMEOUT', 'COMPLETING', 'PENDING'
+    RUNNING, SUSPENDED, COMPLETED, TIMEOUT, COMPLETING, PENDING, FAILED = 'RUNNING', 'SUSPENDED', 'COMPLETED', 'TIMEOUT', 'COMPLETING', 'PENDING', 'FAILED'
 
 class QueueManager(object) :
 
@@ -79,7 +80,10 @@ class QueueManager(object) :
         '''
         Poll jobs, count engines, take appropriate action.
         '''
-        running_ids, queued_ids, completed_ids, missing_ids = self.get_submitted_job_info()
+        try :
+            running_ids, queued_ids, completed_ids, missing_ids = self.get_submitted_job_info()
+        except :
+            return
         n_running = len(running_ids)
         n_queued = len(queued_ids)
         n_completed = len(completed_ids)
@@ -160,7 +164,7 @@ class QueueManager(object) :
                 running_ids.append(job_id)
             elif info['job_state'] == JobState.PENDING :
                 queued_ids.append(job_id)
-            elif info['job_state'] in [JobState.COMPLETED, JobState.COMPLETING, JobState.TIMEOUT] :
+            elif info['job_state'] in [JobState.COMPLETED, JobState.COMPLETING, JobState.TIMEOUT, JobState.FAILED] :
                 completed_ids.append(job_id)
             else :
                 log('[e] Unknown job state %s (job id = %d)' % (info['job_state'], job_id))
